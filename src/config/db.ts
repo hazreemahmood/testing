@@ -18,7 +18,7 @@ const connection = mysql.createConnection({
 });
 
 const createDatabase = async () => {
-  const dbName = 'shopdb';
+  const dbName = process.env.DB_NAME;
   try {
     // Create the database
     await connection.promise().query(`CREATE DATABASE IF NOT EXISTS ${dbName}`);

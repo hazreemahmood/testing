@@ -13,6 +13,14 @@ export const getItemById = async (id: number): Promise<any> => {
 
 export const createItem = async (data: TItem): Promise<any> => await db.insert(items).values(data).$returningId();
 
-export const updateItem = async (id: number, data: TItem): Promise<any> => await db.update(items).set({ ...data, updatedAt: sql`NOW()`}).where(eq(items.id, id));
+export const updateItem = async (id: number, data: TItem): Promise<any> => {
+  console.log(id, data);
+  try {
+    await db.update(items).set({ ...data, updatedAt: sql`NOW()`}).where(eq(items.id, id));
+  }catch(err){
+    console.log(err);
+  }
+  // await db.update(items).set({ ...data, updatedAt: sql`NOW()`}).where(eq(items.id, id));
+};
 
 export const deleteItem = async (id: number): Promise<any> => await db.delete(items).where(eq(items.id, id));

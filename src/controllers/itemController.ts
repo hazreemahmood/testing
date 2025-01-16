@@ -42,10 +42,10 @@ export const show = async (req: Request, res: Response) => {
 
 export const update = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const item = req.body;
+  const { id: ids, createdAt, updateAt, ...data } = req.body;
   try {
-    await itemSchema.validateAsync(item);
-    await updateItem(id as any, item);
+    await itemSchema.validateAsync(data);
+    await updateItem(id as any, data);
     res.status(200).json({ message: 'Item updated successfully' });
   } catch (err) {
     res.status(500).json({ message: 'Failed to update item', error: err });
