@@ -38,16 +38,16 @@ my-backend-app
 
 3. **Configure the database**
    Update the `config/database.ts` file with your MySQL connection details.
-   Create a new database in MySQL according to `DB_NAME` in the configured .env file.
+   Create a new database in MySQL according to `DB_NAME` in the configured `.env` file.
 
-4. **Run migration**
-   ```
-   npx drizzle-kit push
-   ```
-
-5. **Run the application**
+4. **Run the application**
    ```
    npm start
+   ```
+   
+5. **Run migration**
+   ```
+   npx drizzle-kit push
    ```
 
 ## API Endpoints
