@@ -7,14 +7,17 @@ This project is a backend application built with Node.js and TypeScript, designe
 ```
 my-backend-app
 ├── src
+│   ├── config             # Configuration files
+│   │   └── database.ts    # Database connection configuration
 │   ├── controllers        # Contains controllers for handling requests
+│   ├── db/schema          # Contains Drizzle ORM schemas
 │   ├── models             # Contains database models
 │   ├── routes             # Contains route definitions
 │   ├── services           # Contains business logic
 │   ├── utils              # Contains utility functions and validation
 │   └── app.ts             # Entry point of the application
-├── config                 # Configuration files
-│   └── database.ts        # Database connection configuration
+├── .env                   # Environment file
+├── drizzle.config.ts      # Drizzle ORM configuration
 ├── package.json           # NPM package configuration
 ├── tsconfig.json          # TypeScript configuration
 └── README.md              # Project documentation
@@ -35,8 +38,14 @@ my-backend-app
 
 3. **Configure the database**
    Update the `config/database.ts` file with your MySQL connection details.
+   Create a new database in MySQL according to `DB_NAME` in the configured .env file.
 
-4. **Run the application**
+4. **Run migration**
+   ```
+   npx drizzle-kit push
+   ```
+
+5. **Run the application**
    ```
    npm start
    ```

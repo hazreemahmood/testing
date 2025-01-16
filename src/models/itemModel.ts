@@ -1,40 +1,18 @@
 import db from '@config/db';
+import { items } from '@schema/items';
+import { InferModel, eq, sql } from 'drizzle-orm';
 
-interface Item {
-  name: string;
-  description?: string;
-  price: number;
-}
+type TItem = InferModel<typeof item>;
 
-export const getAllItems = async (): Promise<any[]> => {
-  const [results] = await db.query('SELECT * FROM items');
-  return results as any[];
-};
+export const getAllItems = async (): Promise<any[]> => await db.select().from(items);
 
 export const getItemById = async (id: number): Promise<any> => {
-  const [results] = await db.query('SELECT * FROM items WHERE id = ?', [id]);
-  return results;
-};
+  const res = await db.select().from(items).where(eq(items.id, id));
+  return res.length > 0 ? res[0] : null;
+}
 
-export const createItem = async (item: Item): Promise<any> => {
-  const { name, description, price } = item;
-  const [results] = await db.query(
-    'INSERT INTO items (name, description, price) VALUES (?, ?, ?)',
-    [name, description, price]
-  );
-  return results;
-};
+export const createItem = async (data: TItem): Promise<any> => await db.insert(items).values(data).$returningId();
 
-export const updateItem = async (id: number, item: Item): Promise<any> => {
-  const { name, description, price } = item;
-  const [results] = await db.query(
-    'UPDATE items SET name = ?, description = ?, price = ?, updatedAt = CURRENT_TIMESTAMP WHERE id = ?',
-    [name, description, price, id]
-  );
-  return results;
-};
+export const updateItem = async (id: number, data: TItem): Promise<any> => await db.update(items).set({ ...data, updatedAt: sql`NOW()`}).where(eq(items.id, id));
 
-export const deleteItem = async (id: number): Promise<any> => {
-  const [results] = await db.query('DELETE FROM items WHERE id = ?', [id]);
-  return results;
-};
+export const deleteItem = async (id: number): Promise<any> => await db.delete(items).where(eq(items.id, id));

@@ -1,19 +1,35 @@
-import mysql from 'mysql2/promise';
+import 'dotenv/config';
+import { drizzle } from "drizzle-orm/mysql2";
+import mysql from 'mysql2';
 
-const db = mysql.createPool({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'shopdb'
+const pool = mysql.createPool({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
 });
 
-export const connectToDatabase = async () => {
+const db = drizzle({ client: pool });
+
+const connection = mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+});
+
+const createDatabase = async () => {
+  const dbName = 'shopdb';
   try {
-    await db.getConnection();
-    console.log('Connected to MySQL database');
-  } catch (err:any) {
-    console.error('DB connection failed:', err.stack);
+    // Create the database
+    await connection.promise().query(`CREATE DATABASE IF NOT EXISTS ${dbName}`);
+    console.log(`Database '${dbName}' created successfully or already exists.`);
+  } catch (error) {
+    console.error('Error creating database:', error);
+  } finally {
+    connection.end();
   }
 };
+
+createDatabase();
 
 export default db;
